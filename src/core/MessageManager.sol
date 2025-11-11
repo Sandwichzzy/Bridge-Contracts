@@ -13,7 +13,7 @@ contract MessageManager is Initializable, OwnableUpgradeable, ReentrancyGuard, M
     }
 
     function initialize(address initialOwner, address _poolManagerAddress) public initializer {
-        __Ownable_init();
+        __Ownable_init(initialOwner);
         transferOwnership(initialOwner);
         poolManagerAddress = _poolManagerAddress;
         nextMessageNumber = 1;
@@ -24,7 +24,7 @@ contract MessageManager is Initializable, OwnableUpgradeable, ReentrancyGuard, M
         _;
     }
 
-    function sendMessageuint256(
+    function sendMessage(
         uint256 sourceChainId,
         uint256 destChainId,
         address sourceTokenAddress,
