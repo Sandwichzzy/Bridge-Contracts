@@ -127,6 +127,8 @@ interface IPoolManager {
 
     error sourceChainIdError();
 
+    error ChainIdMismatch(uint256 expected, uint256 actual);
+
     error sourceChainIsDestChainError();
 
     error TransferETHFailed();
