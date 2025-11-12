@@ -121,3 +121,25 @@ Relayer 调用 Finalize 时已经验证了映射关系，所以不需要再传�
 | ------------------ | ------ | ---------------- | -------------------------------- |
 | BridageInitiateETH | 源链   | ✅ 需要          | 告诉系统目标链上应该发什么代币   |
 | BridgeFinalizeETH  | 目标链 | ❌ 不需要        | 已从消息中知道，直接发送原生 ETH |
+
+押池周期轮换函数 使用场景示例
+
+// 假设有 ETH 和 USDT 两个质押池，都运行了 21 天
+Pool[] memory pools = new Pool[](2);
+pools[0].token = ETH_ADDRESS;
+pools[1].token = USDT_ADDRESS;
+
+// Relayer 调用完成旧池并创建新池
+poolManager.CompletePoolAndNew(pools);
+
+// 结果：
+// - 旧的 ETH 池和 USDT 池被标记为完成
+// - 累计的手续费被分配给旧池
+// - 新的 ETH 池和 USDT 池被创建，用户质押自动延续
+
+| 特性     | WithdrawOrClaimBySimpleID      | WithdrawOrClaimBySimpleAsset      |
+| -------- | ------------------------------ | --------------------------------- |
+| 操作范围 | 针对单个质押记录（通过 index） | 针对某个代币的所有质押记录        |
+| 遍历方式 | 直接访问指定 index             | 遍历用户所有记录，筛选代币类型    |
+| 使用场景 | 用户想提取/领取特定的一笔质押  | 用户想提取/领取某个代币的所有质押 |
+| 效率     | 更高效（单次操作）             | 需要遍历，效率较低                |

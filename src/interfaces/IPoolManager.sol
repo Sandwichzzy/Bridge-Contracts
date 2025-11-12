@@ -9,7 +9,7 @@ interface IPoolManager {
         uint256 TotalAmount;
         uint256 TotalFee;
         uint256 TotalFeeClaimed;
-        bool isCompleted;
+        bool IsCompleted;
     }
 
     struct User {
@@ -28,7 +28,7 @@ interface IPoolManager {
 
     event DepositToken(address indexed tokenAddress, address indexed sender, uint256 amount);
     event WithdrawToken(address indexed tokenAddress, address sender, address withdrawAddress, uint256 amount);
-    event StarkingERC20Event(address indexed user, address indexed token, uint256 chainId, uint256 amount);
+    event StakingERC20Event(address indexed user, address indexed token, uint256 chainId, uint256 amount);
     event StakingETHEvent(address indexed user, uint256 chainId, uint256 amount);
 
     event InitiateETH(

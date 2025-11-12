@@ -22,13 +22,15 @@ abstract contract PoolManagerStorage is IPoolManager {
     address public withdrawManager;
 
     mapping(uint256 => bool) public IsSupportedChainId;
-    mapping(address => bool) public IsSupportedToken;
+    mapping(address => bool) public IsSupportToken;
     mapping(address => uint256) public FundingPoolBalance;
+    // token address => fee pool value
     mapping(address => uint256) public FeePoolValue;
     // token address => min stake amount
     mapping(address => uint256) public MinStakeAmount;
 
     // token address => pool list
     mapping(address => Pool[]) public Pools;
+    // user address => user staking info list
     mapping(address => User[]) public Users;
 }
