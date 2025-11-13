@@ -14,7 +14,6 @@ contract MessageManager is Initializable, OwnableUpgradeable, ReentrancyGuard, M
 
     function initialize(address initialOwner, address _poolManagerAddress) public initializer {
         __Ownable_init(initialOwner);
-        transferOwnership(initialOwner);
         poolManagerAddress = _poolManagerAddress;
         nextMessageNumber = 1;
     }

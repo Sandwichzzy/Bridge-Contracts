@@ -39,7 +39,7 @@ NETWORK_ARGS := --rpc-url http://localhost:8545 --private-key $(DEFAULT_ANVIL_KE
 NETWORK_SEPOLIA:= --rpc-url $(SEPOLIA_RPC_URL) --account devWallet --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
 NETWORK_ROOTHASH:= --rpc-url $(ROOTHASH_RPC_URL) --account devWallet --broadcast   -vvvv
 deploy-sepolia:
-	@forge script script/DeployMinProxyVRF.s.sol:DeployMinProxyVRFScript $(NETWORK_SEPOLIA)
+	@forge script script/DeployerCrossChainBridge.s.sol:DeployerCrossChainBridge $(NETWORK_SEPOLIA)
 
 deploy-roothash:
-	@forge script script/DeployMinProxyVRF.s.sol:DeployMinProxyVRFScript $(NETWORK_ROOTHASH)
+	@forge script script/DeployerCrossChainBridge.s.sol:DeployerCrossChainBridge $(NETWORK_ROOTHASH)

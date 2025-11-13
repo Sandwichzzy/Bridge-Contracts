@@ -42,7 +42,6 @@ contract PoolManager is Initializable, OwnableUpgradeable, ReentrancyGuard, Paus
         address _withdrawManager
     ) public initializer {
         __Ownable_init(initialOwner);
-        transferOwnership(initialOwner);
         __Pausable_init();
 
         messageManager = IMessageManager(_messageManager);
