@@ -142,6 +142,65 @@ function ClaimbyID(uint256 i) external             // 领取特定记录奖励
 奖励 = (用户质押金额 / 池子总质押量) × 池子总手续费
 ```
 
+**池子轮转机制的核心优势：**
+
+```
+1. 持续质押 + 灵活提取
+
+  // 用户可以随时质押到"未开始"的池子
+  if (Pools[address(ETH_ADDRESS)][PoolIndex].startTimeStamp > block.timestamp) {
+      Users[msg.sender].push(...);  // 质押成功
+  }
+
+  - ✅ 用户不需要锁定，可以随时提取本金+奖励
+  - ✅ 继续质押的用户自动进入下一个周期（TotalAmount继承）
+  - ✅ 新用户可以在池子开始前加入，公平参与
+
+  2. 手续费的公平分配机制
+
+  // 计算用户在每个池子的奖励
+  uint256 _Reward = (Amount * Pools[_token][j].TotalFee) / Pools[_token][j].TotalAmount;
+
+  分配逻辑：
+  - 每个池子的手续费 TotalFee 在周期结束时确定
+  - 用户奖励 = (个人质押量 / 池子总质押量) × 池子总手续费
+  - 跨多个周期质押的用户累积多个池子的奖励
+
+  示例场景：
+  用户A在第1个池子质押 100 ETH
+  - 第1个池子（21天）结束：手续费 10 ETH，A获得份额
+  - 第2个池子（21天）：A的100 ETH继续质押，再获得新手续费份额
+  - 第3个池子：依此类推...
+
+  用户A在第60天提取：获得 3个池子的累积奖励
+
+  3. 激励长期质押者
+
+  // 提取时遍历所有参与的池子
+  for (uint256 j = startPoolId; j < EndPoolId; j++) {
+      uint256 _Reward = (Amount * Pools[_token][j].TotalFee) / Pools[_token][j].TotalAmount;
+      Reward += _Reward;
+  }
+
+  - 质押时间越长，参与的池子周期越多
+  - 累积的奖励越多（复利效应）
+  - 鼓励用户长期持有，增加流动性稳定性
+
+  4. Gas效率优化
+
+  对比传统方案：
+  - ❌ 实时计算奖励：每次桥接都要更新所有质押者的奖励（O(n)操作）
+  - ✅ 池子轮转：奖励在提取时才计算，桥接时只累加 FeePoolValue（O(1)操作）
+
+  // 桥接时只需累加手续费（极低Gas）
+  FeePoolValue[ETH_ADDRESS] += fee;
+
+  // 提取时才遍历池子计算（由用户承担Gas）
+  for (uint256 j = startPoolId; j < EndPoolId; j++) {
+      // 计算奖励...
+  }
+```
+
 ##### 🔸 查询函数
 
 ```solidity
@@ -727,3 +786,9 @@ console.log("奖励已领取！");
 ```
 
 ---
+
+cast send --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY 0x015DD02C6D1CF3f1711dcf453ed4b4f34B778E65 "setValidChainId(uint256,bool)" 11155111 true
+
+cast send --rpc-url $S_URP_URL --private-key $PRIVATE_KEY 0x9B3F87aa9ABbC18b78De9fF245cc945F794F7559 "setValidChainId(uint256,bool)" 90101 true
+
+cast send --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY 0x9B3F87aa9ABbC18b78De9fF245cc945F794F7559 "setSupportERC20Token(address,bool)" 0x12E60438898FB3b4aac8439DEeD57194Dc9C87aa true
